@@ -12,9 +12,20 @@
     "main": {
       "type": "hello-world",
       "settings": {}
+    },
+    "hero_jArwbf": {
+      "type": "hero",
+      "name": "Hero Section",
+      "settings": {
+        "heading": "Headline that grabs attention",
+        "subheading": "Support your headline with value",
+        "primary_cta_link": "",
+        "primary_cta_label": "Shop Now"
+      }
     }
   },
   "order": [
+    "hero_jArwbf",
     "main"
   ]
 }

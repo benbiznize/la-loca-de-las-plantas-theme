@@ -26,14 +26,12 @@
         "id": "subheading",
         "label": "Subheading",
         "default": "Expertly selected greenery to match your lifestyle"
-      },
-      {
+      }, {
         "type": "text",
         "id": "primary_cta_label",
         "label": "Primary CTA Label",
         "default": "Shop Bestsellers"
-      },
-      {
+      }, {
         "type": "url",
         "id": "primary_cta_link",
         "label": "Primary CTA Link"
@@ -46,33 +44,35 @@
       }
     ]
   }
-  {% endschema %}
-  
-  <section class="hero" role="region" aria-label="Featured promotion">
-    <div class="hero-image-wrapper">
-      {% if section.settings.background_image %}
-        <img 
-          src="{{ section.settings.background_image | image_url: width: 1600 }}" 
-          alt="{{ section.settings.background_image_alt | escape }}"
-          class="hero-bg"
-          loading="lazy"
-          width="1600"
-          height="900"
-        >
+{% endschema %}
+
+<section
+  class="hero"
+  role="region"
+  aria-label="Featured promotion">
+  <div class="hero-image-wrapper">
+    {% if section.settings.background_image %}
+      <img
+        src="{{ section.settings.background_image | image_url: width: 1600 }}"
+        alt="{{ section.settings.background_image_alt | escape }}"
+        class="hero-bg"
+        loading="lazy"
+        width="1600"
+        height="900">
+    {% endif %}
+    <div class="hero-content">
+      <h1>{{ section.settings.heading }}</h1>
+      <p>{{ section.settings.subheading }}</p>
+      {% if section.settings.primary_cta_link != blank %}
+        <a href="{{ section.settings.primary_cta_link }}" class="cta-button">
+          {{ section.settings.primary_cta_label }}
+        </a>
       {% endif %}
-      <div class="hero-content">
-        <h1>{{ section.settings.heading }}</h1>
-        <p>{{ section.settings.subheading }}</p>
-        {% if section.settings.primary_cta_link != blank %}
-          <a href="{{ section.settings.primary_cta_link }}" class="cta-button">
-            {{ section.settings.primary_cta_label }}
-          </a>
-        {% endif %}
-      </div>
     </div>
-  </section>
-  
-  <style>
+  </div>
+</section>
+
+<style>
   .hero {
     position: relative;
     width: 100%;
@@ -90,7 +90,8 @@
     height: auto;
     object-fit: cover;
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     z-index: -1;
   }
   .hero-content {
@@ -98,7 +99,7 @@
     max-width: 800px;
     color: white;
     z-index: 2;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   }
   .hero h1 {
     font-size: 2rem;
@@ -110,7 +111,7 @@
   }
   .cta-button {
     background-color: #1a1a1a;
-    color: #fff;
+    color: #9c6161;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     text-decoration: none;
@@ -121,8 +122,8 @@
   .cta-button:focus {
     background-color: #333;
   }
-  
-  @media (min-width: 768px) {
+
+  @media(min-width: 768px) {
     .hero h1 {
       font-size: 2.5rem;
     }
@@ -133,5 +134,4 @@
       padding: 4rem;
     }
   }
-  </style>
-  
+</style>

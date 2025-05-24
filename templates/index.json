@@ -7,26 +7,18 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-{
+ {
   "sections": {
-    "hero_jArwbf": {
-      "type": "hero",
-      "name": "Hero Section",
-      "settings": {
-        "background_image": "shopify://shop_images/DIAPOSITIVA_1.png",
-        "heading": "Headline that grabs attention",
-        "subheading": "Support your headline with value",
-        "primary_cta_link": "",
-        "primary_cta_label": "Shop Now"
-      }
-    },
     "main": {
-      "type": "hello-world",
-      "settings": {}
+      "type": "hero",
+      "settings": {
+        "heading": "Welcome to Our Plant Shop",
+        "subheading": "Find the perfect plant for your space",
+        "cta_label": "Shop Now",
+        "cta_link": "/collections/all"
+      }
     }
   },
-  "order": [
-    "hero_jArwbf",
-    "main"
-  ]
+  "order": ["main"]
 }
+

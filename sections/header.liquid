@@ -1,66 +1,177 @@
-<header>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
+{% schema %}
+  {
+    "name": "Responsive Header",
+    "tag": "header",
+    "class": "responsive-header",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "text",
+        "id": "announcement",
+        "label": "Announcement Text",
+        "default": "Free shipping on orders over $50"
+      },
+      {
+        "type": "link_list",
+        "id": "main_menu",
+        "label": "Main Menu"
+      },
+      {
+        "type": "text",
+        "id": "cta_label",
+        "label": "CTA Button Label",
+        "default": "Take the Quiz"
+      }, {
+        "type": "url",
+        "id": "cta_link",
+        "label": "CTA Button Link"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Responsive Header"
+      }
+    ]
+  }
+{% endschema %}
 
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+<style>
+  .responsive-header-wrapper {
+    border-bottom: 1px solid #eee;
+    font-family: sans-serif;
+  }
 
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      {{ 'icon-account.svg' | inline_asset_content | link_to: routes.account_url }}
-    {% endif %}
+  .announcement-bar {
+    background-color: #2c5f2d;
+    color: white;
+    text-align: center;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+  }
 
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: white;
+  }
+
+  .header-logo img {
+    max-height: 48px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .cta-button {
+    background: #2c5f2d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  @media(max-width: 768px) {
+    .menu-toggle {
+      display: block;
+    }
+
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      background: white;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      padding: 16px;
+      border-top: 1px solid #eee;
+    }
+
+    .nav-links.show {
+      display: flex;
+    }
+
+    .header-inner {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .header-logo {
+      flex: 1;
+    }
+
+    .nav-links a {
+      padding: 10px 0;
+    }
+  }
+</style>
+
+<div class="responsive-header-wrapper">
+  {% if section.settings.announcement != blank %}
+    <div class="announcement-bar">{{ section.settings.announcement }}</div>
+  {% endif %}
+
+  <div class="header-inner">
+    <div class="header-logo">
+      {% if section.settings.logo %}
+        <a href="/">
+          <img
+            src="{{ section.settings.logo | image_url: width: 300 }}"
+            alt="Site logo"
+            width="{{ section.settings.logo.width }}"
+            height="{{ section.settings.logo.height }}">
+        </a>
+      {% else %}
+        <a href="/" style="font-size: 1.5rem; font-weight: bold;">Your Store</a>
       {% endif %}
 
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
+    </div>
+
+    <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+
+    <nav class="nav-links" id="nav-menu">
+      {% if section.settings.main_menu != blank %}
+        {% assign menu = linklists[section.settings.main_menu] %}
+        {% for link in menu.links %}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {% endfor %}
+      {% endif %}
+      {% if section.settings.cta_label != blank %}
+        <a href="{{ section.settings.cta_link }}" class="cta-button">{{ section.settings.cta_label }}</a>
+      {% endif %}
+    </nav>
   </div>
-</header>
+</div>
 
-{% stylesheet %}
-  header {
-    height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  header a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
-
-{% schema %}
-{
-  "name": "t:general.header",
-  "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
-    }
-  ]
-}
-{% endschema %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const toggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("nav-menu");
+    toggle.addEventListener("click", function() {
+      menu.classList.toggle("show");
+    });
+  });
+</script>

@@ -43,6 +43,8 @@
   .responsive-header-wrapper {
     border-bottom: 1px solid #eee;
     font-family: sans-serif;
+    position: relative;
+    z-index: 100;
   }
 
   .announcement-bar {
@@ -92,6 +94,36 @@
     cursor: pointer;
   }
 
+  /* Submenu styles */
+  .nav-item.has-submenu {
+    position: relative;
+  }
+
+  .nav-item.has-submenu .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 12px 0;
+    z-index: 10;
+    flex-direction: column;
+  }
+
+  .nav-item.has-submenu .submenu a {
+    padding: 8px 16px;
+    white-space: nowrap;
+    display: block;
+    color: #333;
+    text-decoration: none;
+  }
+
+  .nav-item.has-submenu:hover .submenu {
+    display: flex;
+  }
+
   @media(max-width: 768px) {
     .menu-toggle {
       display: block;
@@ -126,6 +158,17 @@
     .nav-links a {
       padding: 10px 0;
     }
+
+    .nav-item.has-submenu .submenu {
+      position: static;
+      box-shadow: none;
+      padding-left: 16px;
+      display: none;
+    }
+
+    .nav-item.has-submenu.show .submenu {
+      display: flex;
+    }
   }
 </style>
 
@@ -147,7 +190,6 @@
       {% else %}
         <a href="/" style="font-size: 1.5rem; font-weight: bold;">Your Store</a>
       {% endif %}
-
     </div>
 
     <div class="menu-toggle" id="menu-toggle">&#9776;</div>
@@ -156,7 +198,18 @@
       {% if section.settings.main_menu != blank %}
         {% assign menu = linklists[section.settings.main_menu] %}
         {% for link in menu.links %}
-          <a href="{{ link.url }}">{{ link.title }}</a>
+          {% if link.links.size > 0 %}
+            <div class="nav-item has-submenu">
+              <a href="{{ link.url }}">{{ link.title }}</a>
+              <div class="submenu">
+                {% for sublink in link.links %}
+                  <a href="{{ sublink.url }}">{{ sublink.title }}</a>
+                {% endfor %}
+              </div>
+            </div>
+          {% else %}
+            <a class="nav-item" href="{{ link.url }}">{{ link.title }}</a>
+          {% endif %}
         {% endfor %}
       {% endif %}
       {% if section.settings.cta_label != blank %}
@@ -170,8 +223,18 @@
   document.addEventListener("DOMContentLoaded", function() {
     const toggle = document.getElementById("menu-toggle");
     const menu = document.getElementById("nav-menu");
-    toggle.addEventListener("click", function() {
+    toggle.addEventListener("click", () => {
       menu.classList.toggle("show");
+    });
+
+    const submenuParents = document.querySelectorAll(".has-submenu");
+    submenuParents.forEach(parent => {
+      parent.addEventListener("click", function(e) {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          this.classList.toggle("show");
+        }
+      });
     });
   });
 </script>

@@ -1,0 +1,108 @@
+{% schema %}
+  {
+    "name": "Shoppable Image",
+    "tag": "section",
+    "class": "shoppable-image-section",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "main_image",
+        "label": "Background Image"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "hotspot",
+        "name": "Hotspot",
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Hotspot Label",
+            "default": "Shop"
+          }, {
+            "type": "url",
+            "id": "link",
+            "label": "Hotspot Link"
+          }, {
+            "type": "range",
+            "id": "top_position",
+            "label": "Top Position (%)",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 50
+          }, {
+            "type": "range",
+            "id": "left_position",
+            "label": "Left Position (%)",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "default": 50
+          }
+        ]
+      }
+    ],
+    "max_blocks": 10,
+    "presets": [
+      {
+        "name": "Shoppable Image",
+        "category": "Custom",
+        "blocks": []
+      }
+    ]
+  }
+{% endschema %}
+
+<style>
+  .shoppable-image-container {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .shoppable-image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .hotspot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: #2c5f2d;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    transition: background 0.3s;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .hotspot:hover {
+    background: #1f3f1a;
+  }
+</style>
+
+<div class="shoppable-image-container">
+  {% if section.settings.main_image %}
+    <img
+      src="{{ section.settings.main_image | image_url: width: 1500 }}"
+      width="{{ section.settings.main_image.width }}"
+      height="{{ section.settings.main_image.height }}"
+      alt="Shoppable Image">
+    {% for block in section.blocks %}
+      <a
+        href="{{ block.settings.link }}"
+        class="hotspot"
+        style="top: {{ block.settings.top_position }}%; left: {{ block.settings.left_position }}%;">
+        {{ block.settings.label }}
+      </a>
+    {% endfor %}
+  {% else %}
+    <p>Please upload an image.</p>
+  {% endif %}
+</div>
